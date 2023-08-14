@@ -1,0 +1,76 @@
+/* AnonymizationPage.css */
+
+.csv-textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .anonymize-button,
+  .clear-button,
+  .toggle-button {
+    padding: 8px 12px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .anonymize-button:hover,
+  .clear-button:hover,
+  .toggle-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .file-input {
+    margin: 20px;
+    padding: 10px;
+  }
+  
+  /* Container for the table */
+.table-container {
+  overflow-x: auto; /* Add horizontal scroll when table overflows */
+  max-width: 100%; /* Limit the maximum width of the table */
+}
+
+.csv-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.csv-table th > * {
+  flex-direction: column;
+  display: flex;
+}
+
+.csv-table th,
+.csv-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  white-space: nowrap; /* Prevent text from wrapping */
+  text-align: left;
+}
+
+.csv-table th select {
+  margin: 5px;
+}
+
+.csv-table th input {
+  margin-left: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.csv-table th select,
+.csv-table th input {
+  padding: 4px;
+}
+
+.message {
+  margin: 10px 0;
+}
