@@ -92,34 +92,37 @@ const AnonymizationPage = () => {
     const handleColManipulationValue = () => {
       // iterate over columnManupulationsCollection in order to create new values for a new dataset if needed
       console.log(columnManupulationsCollection)
-      columnManupulationsCollection && Object.keys(columnManupulationsCollection).forEach((col) => {
-        console.log(columnManupulationsCollection[col])        
-        const csvOutput = csvData.map(m => {       
-          if (columnManupulationsCollection[col]) {
-            if (columnManupulationsCollection[col].type === 'fake') {
-              switch (columnManupulationsCollection[col].value) {
-                case 'fullName':
-                  return modifyObject(m, col, faker.person.fullName());
-                  // m[col] = faker.person.fullName();
-                case 'address':
-                  return modifyObject(m, col, faker.location.city());
-                case 'financeAccount':
-                  return modifyObject(m, col, faker.finance.accountNumber());
-                default:
-                  break;
-              }                  
-            }
-  
-            if (columnManupulationsCollection[col].type === 'userInput') {
-              return modifyObject(m, col, columnManupulationsCollection[col].value);
-            }
-          }   
+             
+      let csvOutput = [];
+      csvData.forEach(element => {
+        columnManupulationsCollection && Object.keys(columnManupulationsCollection).forEach((col) => {
+          console.log(columnManupulationsCollection[col]) 
+          if (columnManupulationsCollection[col].type === 'fake') {
+            switch (columnManupulationsCollection[col].value) {
+              case 'fullName':
+                element = modifyObject(element, col, faker.person.fullName());
+                // m[col] = faker.person.fullName();
+              break;
+              case 'address':
+                element = modifyObject(element, col, faker.location.city());
+              break;
+              case 'financeAccount':
+                element = modifyObject(element, col, faker.finance.accountNumber());
+              break;
+              default:
+                break;
+            }                  
+          }
 
-          return m;
-        })
-        console.log(csvOutput)
-        setCsvDataOutput(csvOutput);
-      })    
+          if (columnManupulationsCollection[col].type === 'userInput') {
+            element = modifyObject(element, col, columnManupulationsCollection[col].value);
+          }   
+        });
+        csvOutput.push(element);    
+      });
+      
+      console.log(csvOutput)
+      setCsvDataOutput(csvOutput);
 
       // handleExport();
     };
