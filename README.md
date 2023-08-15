@@ -3,8 +3,21 @@
 
 ## Run this Tool locally
 
-To run this, clone the repo, go into the folder and run this inside a CLI like bash:
+To run this locally, do following steps:
+
+clone the repo
+
+go inside the folder and install the dependecies with a CLI (only the first time):
+
+### `npm i`
+
+start the tool locally:
+
 ### `npm start`
+
+a browser should start and open the site, otherwise you can open it manually.
+
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ## Available Scripts
 
