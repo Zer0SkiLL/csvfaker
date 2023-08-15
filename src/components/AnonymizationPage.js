@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Papa from 'papaparse';
 import './AnonymizationPage.css';
 import { faker } from '@faker-js/faker';
@@ -9,14 +9,22 @@ const AnonymizationPage = () => {
     const [csvDataOutput, setCsvDataOutput] = useState([]);
     const [columnManipulations, setColumnManipulations] = useState({});
     const [columnManupulationsCollection, setColumnManupulationsCollection] = useState([]);
+    const [exportData, setExportData] = useState('');
+    const [exportDataFile, setExportDataFile] = useState(null);
+    const [outputType, setOutputType] = useState('text');
   
     const handleToggle = () => {
       setInputType(inputType === 'text' ? 'file' : 'text');
+      setOutputType(outputType === 'text' ? 'file' : 'text');
       clearCsvData();
       clearCsvDataOutput();
       clearColumnManipulations();
       clearColumnManipulationsCollection();
     };
+
+    const handleToggleOutput = () => {
+      setOutputType(outputType === 'text' ? 'file' : 'text');
+    }
   
     const handleTextInput = () => {
       const textarea = document.querySelector('textarea');
@@ -112,28 +120,64 @@ const AnonymizationPage = () => {
         console.log(csvOutput)
         setCsvDataOutput(csvOutput);
       })    
+
+      // handleExport();
     };
 
     const modifyObject = (originalObject, propertyName, newValue) => {
       return {...originalObject, [propertyName]: newValue};
     }
+
+    useEffect(() => {
+      console.log(csvDataOutput)
+      const csvString = Papa.unparse(csvDataOutput);
+      console.log(csvString)
+      setExportData(Papa.unparse(csvDataOutput));
+      setExportDataFile(new Blob([csvString], { type: 'text/csv;charset=utf-8' }));
+    }, [csvDataOutput]);
+
+    // const handleExport = () => {
+    //   console.log(csvDataOutput)
+    //   let dataToExport = '';
+    //   if (inputType === 'text') {
+    //     // Use original CSV data if input is text
+    //     dataToExport = Papa.unparse(csvDataOutput);
+    //   } else {
+    //     // Use manipulated data if input is file
+    //     dataToExport = new Blob(Papa.unparse(csvDataOutput));
+    //   }
+    //   setExportData(dataToExport);
+    //   console.log(exportData)
+    // };
+  
+    const handleCopyToClipboard = () => {
+      navigator.clipboard.writeText(exportData).then(() => {
+        alert('Data copied to clipboard');
+      });
+    };
     
   
-    // const handleAnonymizeText = () => {
-    //   const manipulatedData = csvData.map((row) => {
-    //     const manipulatedRow = { ...row };
-    //     Object.keys(columnManipulations).forEach((column) => {
-    //       const manipulation = columnManipulations[column];
-    //       if (manipulation.type === 'fake') {
-    //         manipulatedRow[column] = faker.fake(`{{${manipulation.value}}}`);
-    //       } else if (manipulation.type === 'userInput') {
-    //         manipulatedRow[column] = manipulation.value;
-    //       }
-    //     });
-    //     return manipulatedRow;
-    //   });
+    // const handleExport = () => {
+    //   let exportData = [];
+    //   if (inputType === 'text') {
+    //     // Use original CSV data if input is text
+    //     exportData = csvDataOutput;
+    //   } else {
+    //     // Use manipulated data if input is file
+    //     exportData = manipulatedData.length > 0 ? manipulatedData : csvData;
+    //   }
+  
+    //   const csv = Papa.unparse(csvDataOutput);
       
-    //   setCsvData(manipulatedData);
+    //   if (inputType === 'text') {
+    //     // Export as text
+    //     const blob = new Blob([csv], { type: 'text/plain;charset=utf-8' });
+    //     saveAs(blob, 'data.txt');
+    //   } else {
+    //     // Export as CSV file
+    //     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    //     saveAs(blob, 'manipulated_data.csv');
+    //   }
     // };
   
     const clearCsvData = () => {
@@ -229,7 +273,7 @@ const AnonymizationPage = () => {
   
         return (
           <div className="table-container">
-            <h2>Output</h2>
+            <h2>Output Preview</h2>
             <table className="csv-table">
               <thead>
                 <tr>
@@ -288,6 +332,27 @@ const AnonymizationPage = () => {
       {renderTable()}
       {csvData.length > 0 ? <button className='clear-button' onClick={handleColManipulationValue}>Run</button> : ''}
       {renderTableOutput()}
+      {exportData.length > 0 && (
+      <div>
+        <button className="toggle-button" onClick={handleToggleOutput}>
+          {outputType === 'text' ? 'Switch to File Output' : 'Switch to Text Output'}
+        </button>
+        {outputType === 'text' ? (
+          <div>
+            <textarea value={exportData} readOnly rows="5" cols="50" />
+            <button onClick={handleCopyToClipboard}>Copy to Clipboard</button>
+          </div>
+        ) : (
+          <a
+            // href={`data:text/csv;charset=utf-8,${encodeURIComponent(exportDataFile)}`}
+            href={URL.createObjectURL(exportDataFile)}
+            download={`manipulated_data_${Date.now().toString()}.csv`}
+          >
+            Export CSV
+          </a>
+        )}
+      </div>
+    )}
     </div>
   );
 };
