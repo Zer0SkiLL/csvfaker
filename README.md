@@ -1,5 +1,5 @@
 ## A Tool to Anonymize CSV Data
-![image](https://github.com/Zer0SkiLL/csvfaker/assets/34910618/d323f98f-33e3-4193-a3a7-78a6479455d7)
+![image](https://github.com/Zer0SkiLL/csvfaker/assets/34910618/5348530d-d58a-472f-89ce-250f7e232f5f)
 
 ## Run this Tool locally
 
