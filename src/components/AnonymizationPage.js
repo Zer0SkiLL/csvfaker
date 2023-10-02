@@ -52,12 +52,22 @@ const AnonymizationPage = () => {
         header: true,
         dynamicTyping: true,
         complete: (result) => {
-          setCsvData(result.data);
+          const sanitizedDate = result.data.filter(f => !hastEmptyValues(f));
+          setCsvData(sanitizedDate);
           clearColumnManipulations();
           clearColumnManipulationsCollection();
         },
       });
     };
+
+    const hastEmptyValues = (obj) => {
+      for (const key in obj) {
+        if (obj[key] !== null && obj[key] !== undefined) {
+          return false;
+        }
+      }
+      return true;
+    }
   
     const handleFileUpload = (event) => {
       const file = event.target.files[0];
@@ -111,7 +121,8 @@ const AnonymizationPage = () => {
     const handleColManipulationValue = () => {
       // iterate over columnManupulationsCollection in order to create new values for a new dataset if needed
       console.log(columnManupulationsCollection)
-             
+      console.log(csvData);
+
       let csvOutput = [];
       csvData.forEach(element => {
         columnManupulationsCollection && Object.keys(columnManupulationsCollection).forEach((col) => {
@@ -395,7 +406,7 @@ const AnonymizationPage = () => {
   
 
   return (
-    <div>
+    <div className="App">
       <h1>Anonymization Tool</h1>
       <button className="toggle-button" onClick={handleToggle}>
         {inputType === 'text' ? 'Switch to File Input' : 'Switch to Text Input'}
@@ -412,7 +423,7 @@ const AnonymizationPage = () => {
         </button>
         {outputType === 'text' ? (
           <div>
-            <textarea value={exportData} readOnly rows="5" cols="50" />
+            <textarea className="csv-textarea" value={exportData} readOnly rows="5" cols="50" />
             <button onClick={handleCopyToClipboard}>Copy to Clipboard</button>
           </div>
         ) : (
