@@ -12,6 +12,25 @@ const AnonymizationPage = () => {
     const [exportData, setExportData] = useState('');
     const [exportDataFile, setExportDataFile] = useState(null);
     const [outputType, setOutputType] = useState('text');
+
+    const fakerOptions = [
+      { label: 'Firstname', value: 'person.firstName' },
+      { label: 'Lastname', value: 'person.lastName' },
+      { label: 'Fullname', value: 'person.fullName' },
+      { label: 'Address', value: 'location.streetAddress' },
+      { label: 'City', value: 'location.city' },
+      { label: 'Zip', value: 'location.zipCode' },
+      { label: 'email', value: 'email' },
+      { label: 'phone', value: 'phone.number' },
+      { label: 'Finance Account', value: 'finance.accountNumber', option: 8 },
+      { label: 'Finance Account Name', value: 'finance.accountName' },
+      { label: 'Finance Amount', value: 'finance.amount' },
+      { label: 'IBAN', value: 'finance.iban' },
+      { label: 'Credit Card CVV', value: 'finance.creditCardCVV' },
+      { label: 'Credit Card Issuer', value: 'finance.creditCardIssuer' },
+      { label: 'Credit Card Number', value: 'finance.creditCardNumber' },
+      { label: 'Transaction Description', value: 'finance.transactionDescription' },
+    ]
   
     const handleToggle = () => {
       setInputType(inputType === 'text' ? 'file' : 'text');
@@ -98,20 +117,68 @@ const AnonymizationPage = () => {
         columnManupulationsCollection && Object.keys(columnManupulationsCollection).forEach((col) => {
           console.log(columnManupulationsCollection[col]) 
           if (columnManupulationsCollection[col].type === 'fake') {
-            switch (columnManupulationsCollection[col].value) {
-              case 'fullName':
-                element = modifyObject(element, col, faker.person.fullName());
-                // m[col] = faker.person.fullName();
-              break;
-              case 'address':
-                element = modifyObject(element, col, faker.location.city());
-              break;
-              case 'financeAccount':
-                element = modifyObject(element, col, faker.finance.accountNumber());
-              break;
-              default:
-                break;
-            }                  
+            // element = modifyObject(element, col, faker.person.fullName());
+
+            const fakerMethods = {
+              'person.firstName': faker.person.firstName,
+              'person.lastName': faker.person.lastName,
+              'person.fullName': faker.person.fullName,
+              'location.streetAddress': faker.location.streetAddress,
+              'location.city': faker.location.city,
+              'location.zipCode': faker.location.zipCode,
+              'email': faker.internet.email,
+              'phone.number': faker.phone.number,
+              'finance.accountNumber': faker.finance.accountNumber,
+              'finance.accountName': faker.finance.accountName,
+              'finance.amount': faker.finance.amount,
+              'finance.iban': faker.finance.iban,
+              'finance.creditCardCVV': faker.finance.creditCardCVV,
+              'finance.creditCardIssuer': faker.finance.creditCardIssuer,
+              'finance.creditCardNumber': faker.finance.creditCardNumber,
+              'finance.transactionDescription': faker.finance.transactionDescription,
+            };
+            
+            console.log(typeof fakerMethods[columnManupulationsCollection[col].value])
+            console.log(fakerMethods[columnManupulationsCollection[col].value]())
+            // try to generate the data
+            try {
+              if (typeof fakerMethods[columnManupulationsCollection[col].value] === 'function') {
+                var newVal = fakerMethods[columnManupulationsCollection[col].value](columnManupulationsCollection[col].option);
+                element = modifyObject(element, col, newVal);
+              }
+            } catch (error) {
+              element = 'error while generating';
+              console.log(error);
+            }
+      
+            // switch (columnManupulationsCollection[col].value) {
+            //   case 'person.firstName':
+            //     element = modifyObject(element, col, faker.person.firstName());
+            //   break;
+            //   case 'person.lastName':
+            //     element = modifyObject(element, col, faker.person.lastName());
+            //   break;
+            //   case 'person.fullName':
+            //     element = modifyObject(element, col, faker.person.fullName());
+            //   break;
+            //   case 'location.streetAddress':
+            //     element = modifyObject(element, col, faker.location.streetAddress());
+            //   break;
+            //   case 'location.city':
+            //     element = modifyObject(element, col, faker.location.city());
+            //   break;
+            //   case 'location.zipCode':
+            //     element = modifyObject(element, col, faker.location.zipCode());
+            //   break;
+            //   case 'email':
+            //     element = modifyObject(element, col, faker.internet.email());
+            //   break;
+            //   case 'phone':
+            //     element = modifyObject(element, col, faker.phone.phoneNumber());
+            //   break;
+            //   default:
+            //     break;
+            // }                  
           }
 
           if (columnManupulationsCollection[col].type === 'userInput') {
@@ -231,9 +298,12 @@ const AnonymizationPage = () => {
                           }
                         >
                           <option value="">Choose Fake Data</option>
-                          <option value="fullName">Name</option>
+                          {fakerOptions.map((option, index) => (
+                            <option key={index} value={option.value}>{option.label}</option>
+                          ))}
+                          {/* <option value="fullName">Name</option>
                           <option value="address">Address</option>
-                          <option value="financeAccount">Account</option>
+                          <option value="financeAccount">Account</option> */}
                         </select>
                       )}
                       {columnManipulations[column]?.type === 'userInput' && (
