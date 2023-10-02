@@ -1,0 +1,39 @@
+/* Navbar.css */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+  }
+  
+  .navbar ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .navbar li {
+    margin: 0;
+  }
+  
+  .navbar a {
+    text-decoration: none;
+    color: #fff;
+    transition: color 0.2s; /* Add a smooth color transition */
+  }
+  
+  /* Style for hover */
+  .navbar a:hover {
+    color: #ffae42; /* Change color on hover */
+  }
+  
+  /* Style for active link */
+  .navbar a.active {
+    color: #ffae42; /* Change color for the active link */
+  }
+  
+  .page-title {
+    font-size: 24px;
+    margin: 10px 0;
+  }
+  

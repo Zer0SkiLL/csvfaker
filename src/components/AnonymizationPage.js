@@ -406,8 +406,8 @@ const AnonymizationPage = () => {
   
 
   return (
-    <div className="App">
-      <h1>Anonymization Tool</h1>
+    <div className="Content-AnonymizationPage">
+      <h2>Csv</h2>
       <button className="toggle-button" onClick={handleToggle}>
         {inputType === 'text' ? 'Switch to File Input' : 'Switch to Text Input'}
       </button>
